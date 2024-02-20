@@ -155,7 +155,7 @@ class MEFARG(nn.Module):
             elif backbone == 'resnet101':
                 self.backbone = resnet101(pretrained=False)
             else:
-                self.backbone = resnet50()
+                self.backbone = resnet50(pretrained=False)
             self.in_channels = self.backbone.fc.weight.shape[1]
             self.out_channels = self.in_channels // 4
             self.backbone.fc = None
