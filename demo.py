@@ -22,7 +22,7 @@ def main(conf):
         logging.info("Resume form | {} ]".format(conf.resume))
         net = load_state_dict(net, conf.resume)
 
-    csv_file_path = "predictions_AU"
+    csv_file_path = "predictions_AU.csv"
 
     i = 0
     with open(csv_file_path, 'w', newline='') as csvfile:

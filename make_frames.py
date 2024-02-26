@@ -1,6 +1,7 @@
 import cv2
 import argparse
 import os 
+from pathlib import Path
 
 def FrameCapture(path): 
   
@@ -11,7 +12,7 @@ def FrameCapture(path):
                 video_path = os.path.join(root, name)
                 vidObj = cv2.VideoCapture(video_path) 
                 
-                video_name = name.strip(".mp4")
+                video_name = Path(name).stem
 
                 # Used as counter variable 
                 count = 0

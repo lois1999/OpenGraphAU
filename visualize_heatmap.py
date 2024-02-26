@@ -17,6 +17,7 @@ if __name__ == "__main__":
     f.set_figwidth(50)
     plt.rcParams.update({'font.size': 6})
     plt.bar(list(mean_activations.index), mean_activations)
+    plt.axhline(y=50, color='r', linestyle='-')
     plt.ylabel("Intensity")
     plt.xlabel("Action unit")
     plt.ylim(0, 100)
