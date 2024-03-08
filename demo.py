@@ -22,7 +22,7 @@ def main(conf):
         logging.info("Resume form | {} ]".format(conf.resume))
         net = load_state_dict(net, conf.resume)
 
-    csv_file_path = "predictions_AU.csv"
+    csv_file_path = "predictions_AU_test.csv"
 
     i = 0
     with open(csv_file_path, 'w', newline='') as csvfile:
@@ -32,14 +32,12 @@ def main(conf):
                 if file.endswith(".jpg"):
                     print("Working on {}...".format(file))
                     file_path = os.path.join(root, file)
-                    new_root, pair_part_turn = os.path.split(root)
-                    participant_id = (pair_part_turn).split("_")[1][-1]
-                    turn = (pair_part_turn).split("_")[2][-1]
-                    new_root, pair = os.path.split(new_root)
-                    pair_id = pair[2][-1]
-                    new_root, condition_id = os.path.split(new_root)
-                    condition = condition_id[1][-1]
-                 
+                    columns = (file_path).split("/")
+                    condition = columns[1][-1]
+                    pair_id = columns[2][-1]
+                    participant_id = (columns[3]).split("_")[1][-1]
+                    turn = (columns[3]).split("_")[2][-1]
+
                     net.eval()
                     img_transform = image_eval()
                     img = pil_loader(file_path)
@@ -70,7 +68,7 @@ def main(conf):
                         header = ["condition", "pair_id", "participant_id", "turn"] + list(au_dict.keys())
                         csvwriter.writerow(header)
 
-                    i += 1
+                    
                     data_row = [condition, pair_id, participant_id, turn] + list(au_dict.values())
                     csvwriter.writerow(data_row)
 
@@ -84,13 +82,16 @@ def main(conf):
                     if conf.draw_text:
                         img = draw_text(file_path, list(infostr_aus), pred)
                         import cv2
-                        path = conf.input.split('.')[0]+'_pred.jpg'
+                        path = str(i) +'_pred.jpg'
                         cv2.imwrite(path, img)
+                    i += 1
 
 
 # ---------------------------------------------------------------------------------
 
 if __name__=="__main__":
+    # run: python demo.py --arc resnet50 --stage 1 --exp-name demo --resume checkpoints/OpenGraphAU-ResNet50_first_stage.pth --input participant_data  --draw_text
+
     conf = get_config()
     conf.evaluate = True
     set_env(conf)
